@@ -6,6 +6,8 @@ import 'package:ffi/ffi.dart' as pffi;
 
 import 'src/ncurses.g.dart' as nc;
 
+export 'src/program.dart';
+
 Random rand = Random.secure();
 
 final int avatar = 'X'.codeUnitAt(0);
