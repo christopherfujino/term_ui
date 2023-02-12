@@ -39,5 +39,3 @@ void _callback(ffi.DynamicLibrary dylib, nc.NativeLibrary lib, ffi.Pointer<nc.WI
     io.sleep(const Duration(milliseconds: 30));
   }
 }
-
-
