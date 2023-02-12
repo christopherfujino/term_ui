@@ -26,9 +26,7 @@ int main() {
   noecho();
   NCURSES_SIZE_T maxx = stdscr->_maxx;
   NCURSES_SIZE_T maxy = stdscr->_maxy;
-  //printw("%d, %d\n", maxx, maxy);
 
-  bool isDone = false;
   while (loop(maxy, maxx)) {
     mssleep(35);
   }
@@ -78,8 +76,4 @@ void mssleep(int milliseconds) {
   };
 
   nanosleep(&ts, NULL);
-}
-
-char * dynamicformat(char * fmtstr, ...) {
-  size_t needed = snprintf(NULL, 0, fmtstr);
 }

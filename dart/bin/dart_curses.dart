@@ -1,5 +1,5 @@
-import 'package:dart_curses/dart_curses.dart' as dart_curses;
+import 'package:dart_curses/dart_curses.dart';
 
 void main(List<String> arguments) {
-  print('Hello world: ${dart_curses.calculate()}!');
+  Program('libncurses.so.6').run();
 }
