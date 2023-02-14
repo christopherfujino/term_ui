@@ -50,12 +50,27 @@ abstract class NcursesProgram {
     }
   }
 
+  void mvaddch(int y, int x, int char) {
+    final int result = lib.mvaddch(y, x, char);
+    if (result == nc.ERR) {
+      throw Exception('failed calling mvaddch($y, $x, $char)');
+    }
+  }
+
   void echochar(int char) {
     final int result = lib.echochar(char);
     if (result == nc.ERR) {
       throw Exception('failed calling echochar($char)');
     }
   }
+
+  void refresh() {
+    final int result = lib.refresh();
+    if (result == nc.ERR) {
+      throw Exception('failed calling refresh()');
+    }
+  }
+
   void addstr(String str) {
     final ptr = str.toNativeUtf8();
     try {
