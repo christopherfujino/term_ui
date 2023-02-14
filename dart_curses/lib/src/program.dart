@@ -57,8 +57,15 @@ abstract class NcursesProgram {
     }
   }
   void addstr(String str) {
-    final int result = lib.addstr(str.toNativeUtf8());
-    // TODO check result?
+    final ptr = str.toNativeUtf8();
+    try {
+      final int result = lib.addstr(ptr.cast<ffi.Char>());
+      if (result == nc.ERR) {
+        throw Exception('failed calling addstr($str)');
+      }
+    } finally {
+      pffi.malloc.free(ptr);
+    }
   }
 }
 
@@ -68,6 +75,7 @@ abstract class InteractiveProgram extends NcursesProgram {
         ..curs_set(0)
         ..nodelay(win, true)
         ..cbreak()
-        ..noecho();
+        ..noecho()
+        ..scrollok(win, false);
   }
 }

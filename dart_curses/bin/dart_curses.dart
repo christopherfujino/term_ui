@@ -23,7 +23,8 @@ class Program extends InteractiveProgram {
       final int nextRand = rand.nextInt(1 << 32);
       final int char = (nextRand % 94) + 33;
       cury += 1;
-      if (cury > maxy) {
+      // Skip the last line so we don't wrap
+      if (cury >= maxy) {
         cury = 0;
         curx = nextRand % (maxx + 1);
       }
@@ -40,7 +41,7 @@ class Program extends InteractiveProgram {
     }
 
     while (loop()) {
-      io.sleep(const Duration(milliseconds: 30));
+      io.sleep(const Duration(milliseconds: 15));
     }
   }
 }
