@@ -1,7 +1,8 @@
+import 'build_context.dart';
 import 'widgets.dart';
 import 'render_objects.dart';
 
-abstract class Element {
+abstract class Element implements BuildContext {
   Element(this.widget);
 
   final Widget widget;
@@ -10,7 +11,8 @@ abstract class Element {
 
   void mount(Element? parent, Object? newSlot) => throw UnimplementedError('Not sure how to handle');
 
-  void rebuild();
+  void rebuild() => throw UnimplementedError('Should be empty');
+
 }
 
 class RootElement {
@@ -21,10 +23,13 @@ class ComponentElement extends Element {
   ComponentElement(super.widget);
 }
 
+
 class RenderObjectElement extends Element {
   RenderObjectElement(super.widget);
 
   RenderObject? _renderObject;
+
+  void attachRenderObject(Object? newSlot) => throw UnimplementedError('TODO figure out');
 
   @override
   RenderObject get renderObject => _renderObject!;

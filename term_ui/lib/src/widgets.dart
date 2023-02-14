@@ -4,12 +4,17 @@ import 'render_objects.dart';
 
 abstract class Widget {
   const Widget();
+
+  Element createElement();
 }
 
 abstract class RenderObjectWidget extends Widget {
   const RenderObjectWidget();
 
   RenderObject createRenderObject(BuildContext context);
+
+  @override
+  RenderObjectElement createElement();
 }
 
 abstract class StatelessWidget extends Widget {
