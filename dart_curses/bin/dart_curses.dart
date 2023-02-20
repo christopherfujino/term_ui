@@ -13,7 +13,18 @@ void main(List<String> arguments) {
 const int greenIndex = 0;
 
 class Program extends InteractiveProgram {
-  Program() : super('libncurses.so.6');
+  Program._(super.path);
+
+  factory Program() {
+    if (io.Platform.isLinux) {
+      return Program._('libncurses.so.6');
+    }
+    if (io.Platform.isMacOS) {
+      // path discovery doesn't work?
+      return Program._('/opt/local/lib/libncurses.6.dylib');
+    }
+    throw UnimplementedError('do not know your OS bruh');
+  }
 
   late int maxx = win.ref.maxx;
   late int maxy = win.ref.maxy;
