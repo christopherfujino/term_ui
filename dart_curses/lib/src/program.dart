@@ -57,6 +57,20 @@ abstract class NcursesProgram {
     }
   }
 
+  void attron(int index) {
+    final int result = lib.attron(lib.COLOR_PAIR(index));
+    if (result == nc.ERR) {
+      throw Exception('Foo bar');
+    }
+  }
+
+  void init_pair(int index, int foreground, int background) {
+    final int result = lib.init_pair(index, foreground, background);
+    if (result == nc.ERR) {
+      throw Exception('failed calling init_pair($index, $foreground, $background)');
+    }
+  }
+
   void echochar(int char) {
     final int result = lib.echochar(char);
     if (result == nc.ERR) {

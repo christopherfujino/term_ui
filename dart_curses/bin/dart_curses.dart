@@ -4,10 +4,13 @@ import 'dart:io' as io;
 import 'dart:math';
 
 import 'package:dart_curses/dart_curses.dart';
+import 'package:dart_curses/bindings.dart' as nc;
 
 void main(List<String> arguments) {
   Program().run();
 }
+
+const int greenIndex = 0;
 
 class Program extends InteractiveProgram {
   Program() : super('libncurses.so.6');
@@ -19,6 +22,8 @@ class Program extends InteractiveProgram {
 
   @override
   void runImpl() {
+    lib.start_color();
+    init_pair(greenIndex, nc.COLOR_GREEN, nc.COLOR_BLACK);
     Random rand = Random.secure();
     int i = 0;
     final int interval = maxy ~/ 7;
@@ -66,6 +71,7 @@ class Star {
 
   bool? tick(Program program, int char) {
     final int top = (y - tailLength).clamp(0, y);
+    program.attron(greenIndex);
     for (int tailY = 0; tailY + y >= 0 && tailY + y >= top; tailY -= 1) {
       program.mvaddch(tailY + y, x, char);
     }
