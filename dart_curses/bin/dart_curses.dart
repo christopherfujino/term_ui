@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:ffi' as ffi;
 import 'dart:io' as io;
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:dart_curses/dart_curses.dart';
 import 'package:dart_curses/bindings.dart' as nc;
@@ -11,6 +12,8 @@ void main(List<String> arguments) {
 }
 
 const int greenIndex = 1; // must be >= 1
+final Random rand = Random.secure();
+int get nextChar => rand.nextInt(94) + 33;
 
 class Program extends InteractiveProgram {
   Program._(super.path);
@@ -28,7 +31,6 @@ class Program extends InteractiveProgram {
 
   late int maxx = win.ref.maxx;
   late int maxy = win.ref.maxy;
-  final Random rand = Random.secure();
 
   final Queue<Star> stars = Queue<Star>();
 
@@ -49,8 +51,6 @@ class Program extends InteractiveProgram {
         stars.add(Star(rand.nextInt(maxx + 1), 0));
       }
       i += 1;
-      final int nextRand = rand.nextInt(94);
-      final int char = nextRand + 33;
       clear();
 
       final int? gotChar = getch();
@@ -60,7 +60,7 @@ class Program extends InteractiveProgram {
 
       bool shouldRemove = false;
       for (final Star star in stars) {
-        shouldRemove = star.tick(this, char) ?? shouldRemove;
+        shouldRemove = star.tick(this, maxy) ?? shouldRemove;
       }
 
       if (shouldRemove) {
@@ -72,30 +72,37 @@ class Program extends InteractiveProgram {
     }
 
     while (loop()) {
-      io.sleep(const Duration(milliseconds: 20));
+      io.sleep(const Duration(milliseconds: 40));
     }
   }
 }
 
 class Star {
-  Star(this.x, this.y);
+  Star(this.x, this.y) {
+    for (int i = 0; i < tailLength; i++) {
+      chars[i] = nextChar;
+    }
+  }
 
   final int x;
   int y;
+  final Uint8List chars = Uint8List(tailLength);
 
   static const int tailLength = 5;
 
-  bool? tick(Program program, int char) {
+  bool? tick(Program program, int maxy) {
     final int top = (y - tailLength).clamp(0, y);
-    program.attron(greenIndex);
-    for (int tailY = 0; tailY + y >= 0 && tailY + y >= top; tailY -= 1) {
-      program.mvaddch(tailY + y, x, char);
-    }
-    y += 1;
-    if (y >= program.maxy) {
+    if (top >= maxy) {
       return true;
     }
+    final int bottom = min(y, maxy - 1);
+    final int length = bottom - top;
+    program.attron(greenIndex);
+    for (int i = 0; i < length; i++) {
+      program.mvaddch(top + i, x, chars[i]);
+    }
 
+    y += 1;
     return null;
   }
 }
