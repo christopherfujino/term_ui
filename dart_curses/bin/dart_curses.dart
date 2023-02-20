@@ -10,7 +10,7 @@ void main(List<String> arguments) {
   Program().run();
 }
 
-const int greenIndex = 0;
+const int greenIndex = 1; // must be >= 1
 
 class Program extends InteractiveProgram {
   Program._(super.path);
@@ -28,14 +28,19 @@ class Program extends InteractiveProgram {
 
   late int maxx = win.ref.maxx;
   late int maxy = win.ref.maxy;
+  final Random rand = Random.secure();
 
   final Queue<Star> stars = Queue<Star>();
 
   @override
   void runImpl() {
-    lib.start_color();
+    if (!lib.has_colors()) {
+      throw 'foolies';
+    }
+    if (lib.start_color() != nc.OK) {
+      throw 'failed calling start_color';
+    }
     init_pair(greenIndex, nc.COLOR_GREEN, nc.COLOR_BLACK);
-    Random rand = Random.secure();
     int i = 0;
     final int interval = maxy ~/ 7;
 
