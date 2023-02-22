@@ -12,6 +12,8 @@ void main(List<String> arguments) {
 }
 
 const int greenIndex = 1; // must be >= 1
+const int whiteIndex = 2;
+
 final Random rand = Random.secure();
 int get nextChar => rand.nextInt(94) + 33;
 
@@ -43,6 +45,7 @@ class Program extends InteractiveProgram {
       throw 'failed calling start_color';
     }
     init_pair(greenIndex, nc.COLOR_GREEN, nc.COLOR_BLACK);
+    init_pair(whiteIndex, nc.COLOR_WHITE, nc.COLOR_BLACK);
     int i = 0;
     final int interval = maxy ~/ 7;
 
@@ -60,7 +63,7 @@ class Program extends InteractiveProgram {
 
       bool shouldRemove = false;
       for (final Star star in stars) {
-        shouldRemove = star.tick(this, maxy) ?? shouldRemove;
+        shouldRemove = star.tick(this) ?? shouldRemove;
       }
 
       if (shouldRemove) {
@@ -88,19 +91,22 @@ class Star {
   int y;
   final Uint8List chars = Uint8List(tailLength);
 
-  static const int tailLength = 5;
+  static const int tailLength = 15;
 
-  bool? tick(Program program, int maxy) {
+  bool? tick(Program program) {
     final int top = (y - tailLength).clamp(0, y);
-    if (top >= maxy) {
+    if (top >= program.maxy) {
       return true;
     }
-    final int bottom = min(y, maxy - 1);
+    final int bottom = min(y, program.maxy - 1);
     final int length = bottom - top;
     program.attron(greenIndex);
-    for (int i = 0; i < length; i++) {
+    late int i;
+    for (i = 0; i < length - 1; i++) {
       program.mvaddch(top + i, x, chars[i]);
     }
+    program.attron(whiteIndex);
+    program.mvaddch(top + i, x, chars[i]);
 
     y += 1;
     return null;
