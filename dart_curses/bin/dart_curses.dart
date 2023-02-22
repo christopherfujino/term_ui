@@ -47,11 +47,15 @@ class Program extends InteractiveProgram {
     init_pair(greenIndex, nc.COLOR_GREEN, nc.COLOR_BLACK);
     init_pair(whiteIndex, nc.COLOR_WHITE, nc.COLOR_BLACK);
     int i = 0;
+    // how many rows before a new Stars should be spawned.
     final int interval = maxy ~/ 7;
+    final int starsPerRow = maxx ~/ 10 + 1;
 
     bool loop() {
       if (i % interval == 0) {
-        stars.add(Star(rand.nextInt(maxx + 1), 0));
+        for (int j = 0; j < starsPerRow; j++) {
+          stars.add(Star(rand.nextInt(maxx + 1), 0));
+        }
       }
       i += 1;
       clear();
